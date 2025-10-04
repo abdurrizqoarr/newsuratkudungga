@@ -46,7 +46,12 @@
             <a href="{{ route('sign.warningPage') }}"
                 class="w-full h-48 rounded-lg bg-white shadow flex items-center justify-center flex-col gap-3 text-center lg:text-lg font-medium text-gray-700">
                 <img src="{{ url('ico/sign.png') }}" alt="ket-sakit" class="w-20">
-                <p>SIGN DOKUMEN</p>
+                <p>SIGN DOKUMEN WITH QR</p>
+            </a>
+            <a href="{{ route('sign.warningPage-no-qr') }}"
+                class="w-full h-48 rounded-lg bg-white shadow flex items-center justify-center flex-col gap-3 text-center lg:text-lg font-medium text-gray-700">
+                <img src="{{ url('ico/sign.png') }}" alt="ket-sakit" class="w-20">
+                <p>SIGN DOKUMEN NO QR</p>
             </a>
         </div>
     </div>
