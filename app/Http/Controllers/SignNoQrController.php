@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use App\Models\SignDokumen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class SignNoQrController extends Controller
 {
@@ -77,6 +80,61 @@ class SignNoQrController extends Controller
 
     public function simpanAndDownload(Request $request)
     {
-        
+        $request->validate([
+            'id_dokumen' => 'required|string',
+            'nama_file'  => 'required|string|max:255',
+        ]);
+
+        try {
+
+            $loginUser = Session::get('user_id');
+
+            $pegawai = Pegawai::select(['no_ktp', 'nik'])->where('nik', $loginUser)->first();
+
+            if (!$pegawai) {
+                $this->dispatch('notify', [
+                    'type' => 'error',
+                    'message' => 'User tidak ditemukan.'
+                ]);
+                return;
+            }
+
+            $url = env('API_TTE') . 'sign/download/' . $request->input('id_dokumen');
+            Log::info("Mengunduh dokumen dari API TTE", ['url' => $url]);
+            $response = Http::withOptions(['verify' => false])->get($url);
+
+            if (!$response->successful()) {
+                Log::error("Gagal mengunduh dokumen dari API TTE", [
+                    'status' => $response->status(),
+                    'body'   => $response->body()
+                ]);
+
+                $this->dispatch('notify', [
+                    'type' => 'error',
+                    'message' => 'Gagal mengunduh dokumen yang sudah ditandatangani'
+                ]);
+
+                return;
+            }
+
+            $filename = $request->input('nama_file') . '_' . now()->timestamp . '.pdf';
+            Storage::put("private/{$filename}", $response->body());
+
+            SignDokumen::create([
+                'file' => "private/{$filename}",
+                'nik' => $pegawai->no_ktp,
+                'nama_file' => $filename,
+                'no_rawat' => null,
+            ]);
+
+            $path = storage_path("app/private/{$filename}");
+            return response()->download($path, $filename)->deleteFileAfterSend(false);
+        } catch (\Throwable $th) {
+            Log::error("Error saat simpan dan download dokumen", ['error' => $th->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan dokumen: ' . $th->getMessage()
+            ], 500);
+        }
     }
 }

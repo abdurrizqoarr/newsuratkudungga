@@ -32,8 +32,8 @@
                 <input type="text" wire:model="search"
                     class="w-full px-4 py-2 border bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="Cari Berdasarkan nama pasien, nomer RM, nomer rawat, atau nomer surat" />
-
             </div>
+            
             <div class="flex justify-end mt-6">
                 <button type="submit"
                     class="px-12 py-2 bg-emerald-600 text-sm text-white rounded-md hover:bg-emerald-700 transition font-medium cursor-pointer flex items-center justify-center"

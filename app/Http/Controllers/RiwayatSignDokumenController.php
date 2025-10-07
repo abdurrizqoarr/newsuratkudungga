@@ -17,7 +17,7 @@ class RiwayatSignDokumenController extends Controller
 
         $search = $request->input('search');
 
-        $query = SignDokumen::where('pegawai_id', $pegawai->id);
+        $query = SignDokumen::where('nik', $pegawai->no_ktp);
 
         if ($search) {
             $query->where('nama_file', 'like', '%' . $search . '%');
@@ -26,5 +26,22 @@ class RiwayatSignDokumenController extends Controller
         $signDokumens = $query->orderBy('created_at', 'desc')->paginate(20);
 
         return view('riwayatDokumenSign', compact('signDokumens', 'search'));
+    }
+
+    public function downloadPrivateFile($idSign)
+    {
+        $signDokumen = SignDokumen::find($idSign);
+
+        if (!$signDokumen) {
+            return abort(404, 'Dokumen tidak ditemukan.');
+        }
+
+        $path = storage_path("app/{$signDokumen->file}");
+
+        if (!file_exists($path)) {
+            return abort(404, 'Dokumen tidak ditemukan.');
+        }
+
+        return response()->download($path, $signDokumen->nama_file);
     }
 }

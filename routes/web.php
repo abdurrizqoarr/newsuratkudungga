@@ -4,6 +4,7 @@ use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\DokumenPrintController;
+use App\Http\Controllers\RiwayatSignDokumenController;
 use App\Http\Controllers\SignDokumenController;
 use App\Http\Controllers\SignNoQrController;
 use App\Http\Controllers\verifyDokumenController;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/jadwal', [AntrianController::class, 'indexAntrian']);
 Route::get('/jadwal-poli', [AntrianController::class, 'jadwalKlinik']);
 Route::get('/jadwal-poli-api', [AntrianController::class, 'jadwalKlinikApi']);
@@ -54,11 +56,15 @@ Route::get('/dokumen-konsultasi-dokter/{id}', [DokumenPrintController::class, 'p
 
 Route::get('/verifikasi-dokumen', [verifyDokumenController::class, 'index'])->name('verifikasi.dokumen')->middleware(CustomSessionAuth::class);
 
-Route::get('/user-konfirmasi', [SignDokumenController::class, 'index'])->name('sign.warningPage')->middleware(CustomSessionAuth::class);
-Route::get('/sign-dokumen', [SignDokumenController::class, 'signDokumenView'])->name('sign.dokumen')->middleware(CustomSessionAuth::class);
+// Route::get('/user-konfirmasi', [SignDokumenController::class, 'index'])->name('sign.warningPage')->middleware(CustomSessionAuth::class);
+// Route::get('/sign-dokumen', [SignDokumenController::class, 'signDokumenView'])->name('sign.dokumen')->middleware(CustomSessionAuth::class);
 
 Route::get('no-qr/user-konfirmasi', [SignNoQrController::class, 'index'])->name('sign.warningPage-no-qr')->middleware(CustomSessionAuth::class);
 Route::get('no-qr/sign-dokumen', [SignNoQrController::class, 'signDokumenView'])->name('sign.dokumen-no-qr')->middleware(CustomSessionAuth::class);
 
-Route::post('/sign-dokumen-qr', [SignDokumenController::class, 'handleSignDokumen']);
+// Route::post('/sign-dokumen-qr', [SignDokumenController::class, 'handleSignDokumen']);
 Route::post('/sign-dokumen-no-qr', [SignNoQrController::class, 'handleSignDokumen']);
+Route::post('/download-and-simpan', [SignNoQrController::class, 'simpanAndDownload']);
+
+Route::get('riwayat-dokumen-tte', [RiwayatSignDokumenController::class, 'index'])->name('riwayat.dokumen-tte')->middleware(CustomSessionAuth::class);
+Route::get('download-dokumen/{id}', [RiwayatSignDokumenController::class, 'downloadPrivateFile'])->name('download.dokumen')->middleware(CustomSessionAuth::class);
