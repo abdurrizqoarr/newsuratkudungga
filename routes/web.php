@@ -57,11 +57,8 @@ Route::get('/verifikasi-dokumen', [verifyDokumenController::class, 'index'])->na
 Route::get('/user-konfirmasi', [SignDokumenController::class, 'index'])->name('sign.warningPage')->middleware(CustomSessionAuth::class);
 Route::get('/sign-dokumen', [SignDokumenController::class, 'signDokumenView'])->name('sign.dokumen')->middleware(CustomSessionAuth::class);
 
-// Route::get('no-qr/user-konfirmasi', [SignNoQrController::class, 'index'])->name('sign.warningPage-no-qr')->middleware(CustomSessionAuth::class);
-// Route::get('no-qr/sign-dokumen', [SignNoQrController::class, 'signDokumenView'])->name('sign.dokumen-no-qr')->middleware(CustomSessionAuth::class);
-
-Route::get('no-qr/user-konfirmasi', [SignNoQrController::class, 'index'])->name('sign.warningPage-no-qr');
-Route::get('no-qr/sign-dokumen', [SignNoQrController::class, 'signDokumenView'])->name('sign.dokumen-no-qr');
+Route::get('no-qr/user-konfirmasi', [SignNoQrController::class, 'index'])->name('sign.warningPage-no-qr')->middleware(CustomSessionAuth::class);
+Route::get('no-qr/sign-dokumen', [SignNoQrController::class, 'signDokumenView'])->name('sign.dokumen-no-qr')->middleware(CustomSessionAuth::class);
 
 Route::post('/sign-dokumen-qr', [SignDokumenController::class, 'handleSignDokumen']);
 Route::post('/sign-dokumen-no-qr', [SignNoQrController::class, 'handleSignDokumen']);

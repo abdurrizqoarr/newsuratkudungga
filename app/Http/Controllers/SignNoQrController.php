@@ -74,4 +74,9 @@ class SignNoQrController extends Controller
             'error'   => $response->json()
         ], $response->status());
     }
+
+    public function simpanAndDownload(Request $request)
+    {
+        
+    }
 }
