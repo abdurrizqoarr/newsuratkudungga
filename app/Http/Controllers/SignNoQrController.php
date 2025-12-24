@@ -55,11 +55,12 @@ class SignNoQrController extends Controller
         ];
 
         // Panggil API eksternal
-        $response = Http::attach(
-            'signed_file',                 // nama field file sesuai yang diminta API
-            file_get_contents($file->getRealPath()),
-            $file->getClientOriginalName()
-        )
+        $response = Http::withoutVerifying() // ⬅️ LEWATI SSL
+            ->attach(
+                'signed_file',
+                file_get_contents($file->getRealPath()),
+                $file->getClientOriginalName()
+            )
             ->post(env('API_TTE') . 'sign/dokumen-no-qr', $payload);
 
         // Balikkan response ke client

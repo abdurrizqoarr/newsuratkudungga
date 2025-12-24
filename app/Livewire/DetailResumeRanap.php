@@ -97,10 +97,13 @@ class DetailResumeRanap extends Component
             ];
 
             // kirim request ke API dalam bentuk JSON
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ])->withBody(json_encode($payload, JSON_UNESCAPED_UNICODE), 'application/json')
+            $response = Http::withOptions([
+                'verify' => false
+            ])
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ])->withBody(json_encode($payload, JSON_UNESCAPED_UNICODE), 'application/json')
                 ->post(env('API_TTE') . 'sign/resume-ranap');
 
             if ($response->successful()) {
